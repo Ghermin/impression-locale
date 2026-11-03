@@ -1,7 +1,6 @@
 # Impression locale
 
 **Imprimer sur une jet d'encre Epson depuis Android, sans appli Epson et sans passer par Internet.**
-*English below.*
 
 Site : https://ghermin.github.io/impression-locale/ — Télécharger : [ImpressionLocale.apk](https://github.com/Ghermin/impression-locale/releases/latest/download/ImpressionLocale.apk)
 
@@ -11,12 +10,16 @@ fois, puis l'imprimante apparaît dans le menu **Imprimer** natif de toutes les 
 
 - Le téléphone convertit lui-même les pages dans le langage des jet d'encre Epson
   (ESC/P-R) et les envoie **directement à l'imprimante** sur le Wi-Fi (port 9100).
-- **Rien ne sort du réseau local** : pas de compte, pas de statistiques, pas de serveur,
-  pas de pub. Le code fait ~1000 lignes, tout est lisible dans [android/](android/).
+- **Les documents ne sortent pas du réseau local** : pas de compte, pas de statistiques,
+  pas de serveur, pas de pub. Seule connexion extérieure : au plus une fois par jour,
+  l'appli lit la dernière version publiée sur GitHub (rien n'est envoyé) et prévient par
+  une notification s'il y a une mise à jour. Tout est lisible dans [android/](android/).
 - L'imprimante est trouvée automatiquement (mDNS/Bonjour). Sinon, on peut ajouter son
   adresse IP dans l'appli « Impression locale ».
 - Formats : A4, Lettre, Légal, A5, A6, B5, 10×15, 13×18, carte postale ; couleur ou
   noir et blanc ; copies multiples. Android 8 ou plus récent.
+- Thème clair ou sombre automatique, selon le réglage du téléphone (appli) ou de
+  l'appareil (site).
 
 ## Mon imprimante est-elle compatible ?
 
@@ -42,7 +45,12 @@ modèles de la liste.
    **Impression** que « Impression locale » est activé.
 3. Optionnel : désinstaller Epson Print Enabler / Epson iPrint pour ne garder qu'une
    seule entrée par imprimante.
-4. Dans l'appli « Impression locale », **Imprimer une page de test**.
+4. Dans l'appli « Impression locale », **Imprimer une page de test** (et accepter les
+   notifications, pour être prévenu des mises à jour).
+
+**Mises à jour** : quand une nouvelle version est publiée ici, une notification
+« Impression locale X disponible » apparaît ; la toucher télécharge l'APK, l'ouvrir
+l'installe par-dessus (Android demande une confirmation).
 
 ## Limites
 
@@ -76,28 +84,6 @@ publié par Epson sous GPL. Le flux produit a été vérifié identique, octet p
 Projet indépendant, **sans lien avec Seiko Epson Corporation**. « Epson » est une marque
 de Seiko Epson Corporation.
 
----
+## Licence
 
-## English
-
-**Print to Epson inkjet printers from Android without the Epson app and without the cloud.**
-
-An Android **print service plugin** (like Epson Print Enabler): install it once and your
-printer shows up in the native **Print** menu of every app. Pages are rasterized on the
-phone into Epson's ESC/P-R language and sent straight to the printer over Wi-Fi (raw
-port 9100). Nothing leaves your local network: no account, no analytics, no server.
-
-- **Compatible**: Wi-Fi Epson inkjets that speak ESC/P-R — the 617 models of Epson's
-  official Linux driver ([list](android/app/src/main/assets/escpr_models.txt)). Not
-  ESC/P-R2-only models, not lasers.
-- **Tested** on an EcoTank ET-2600 only; reports for other models are welcome.
-- **Install**: download [ImpressionLocale.apk](https://github.com/Ghermin/impression-locale/releases/latest/download/ImpressionLocale.apk),
-  open it, then print from any app. The app UI is in French; the print dialog is Android's own.
-- **Limits**: 360 dpi, plain paper, normal quality; no borderless, no duplex, no ink levels.
-  An interrupted job can leave the printer stuck — power-cycle it.
-
-Independent project, not affiliated with Seiko Epson Corporation.
-
-## Licence / License
-
-GPL-2.0-or-later — see [LICENSE](LICENSE).
+GPL-2.0-or-later : voir [LICENSE](LICENSE).

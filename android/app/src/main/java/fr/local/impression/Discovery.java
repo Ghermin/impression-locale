@@ -50,6 +50,7 @@ final class Discovery extends PrinterDiscoverySession {
         }
         addPrinters(known);
         startMdns();
+        UpdateChecker.check(service, false, null);
     }
 
     @Override

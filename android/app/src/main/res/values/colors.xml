@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mêmes teintes que le site. -->
+    <color name="fond">#F6F7F5</color>
+    <color name="accent">#2E7D32</color>
+</resources>

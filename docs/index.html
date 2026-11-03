@@ -5,8 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Impression locale</title>
 <meta name="description" content="Imprimer sur une jet d'encre Epson depuis Android, sans appli Epson et sans passer par Internet.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121513" media="(prefers-color-scheme: dark)">
 <style>
   :root {
+    color-scheme: light dark;
     --bg: #f6f7f5; --surface: #ffffff; --text: #1d211e; --muted: #5b625d;
     --line: #dde1dc; --accent: #2e7d32; --accent-text: #ffffff; --ok: #1b5e20; --ok-bg: #e3f1e4;
     --no: #8a1c1c; --no-bg: #f8e5e3; --code: #eef0ec;
@@ -47,12 +51,10 @@
   code { background: var(--code); padding: 1px 6px; border-radius: 5px; font-size: .92em; }
   a { color: var(--accent); }
   footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
-  .lang { float: right; font-size: .9rem; }
 </style>
 </head>
 <body>
 <main>
-  <a class="lang" href="#english">English</a>
   <header>
     <svg width="64" height="64" viewBox="0 0 108 108" aria-hidden="true">
       <rect width="108" height="108" fill="#2E7D32"/>
@@ -71,7 +73,8 @@
   <h2>Le principe</h2>
   <div class="points">
     <div class="card"><strong>Comme Epson Print Enabler</strong><p>Un plug-in à installer une fois : l'imprimante apparaît ensuite dans le menu <em>Imprimer</em> de toutes les applis.</p></div>
-    <div class="card"><strong>Tout reste chez vous</strong><p>Les pages sont converties sur le téléphone et envoyées directement à l'imprimante par le Wi-Fi. Pas de compte, pas de statistiques, pas de serveur.</p></div>
+    <div class="card"><strong>Vos documents restent chez vous</strong><p>Les pages sont converties sur le téléphone et envoyées directement à l'imprimante par le Wi-Fi. Pas de compte, pas de statistiques, pas de serveur.</p></div>
+    <div class="card"><strong>Mises à jour</strong><p>Une fois par jour au plus, l'appli regarde la dernière version sur GitHub (rien n'est envoyé) et vous prévient par une notification.</p></div>
     <div class="card"><strong>Trouvée automatiquement</strong><p>L'imprimante est détectée sur le réseau local. Sinon, on peut saisir son adresse IP.</p></div>
   </div>
 
@@ -88,7 +91,7 @@
   <ol>
     <li>Sur le téléphone, <a href="https://github.com/Ghermin/impression-locale/releases/latest/download/ImpressionLocale.apk">téléchargez ImpressionLocale.apk</a> et ouvrez-le. Android demande d'autoriser l'installation depuis le navigateur : acceptez pour cette fois.</li>
     <li>Paramètres &gt; Appareils connectés &gt; Préférences de connexion &gt; <strong>Impression</strong> : vérifiez que « Impression locale » est activé.</li>
-    <li>Ouvrez l'appli « Impression locale » et touchez <strong>Imprimer une page de test</strong>.</li>
+    <li>Ouvrez l'appli « Impression locale », acceptez les notifications (pour les mises à jour) et touchez <strong>Imprimer une page de test</strong>.</li>
     <li>Ensuite, dans n'importe quelle appli : <strong>Partager</strong> ou <strong>⋮</strong> &gt; <strong>Imprimer</strong>.</li>
   </ol>
   <p class="note">Vous pouvez ensuite désinstaller Epson Print Enabler / Epson iPrint pour n'avoir qu'une entrée par imprimante.</p>
@@ -98,14 +101,6 @@
     <li>Qualité normale (360 ppp) sur papier ordinaire ; pas de sans-bordure, pas de recto verso, pas de niveaux d'encre.</li>
     <li>Si le Wi-Fi coupe en pleine impression, l'imprimante peut rester bloquée (voyant qui clignote) : éteignez-la puis rallumez-la.</li>
   </ul>
-
-  <h2 id="english">English</h2>
-  <p>An Android <strong>print service plugin</strong> for Epson inkjets, like Epson Print Enabler but with nothing leaving your network.
-    Install it once; your printer then appears in the native <em>Print</em> menu of every app. Pages are rasterized on the phone into
-    Epson's ESC/P-R language and sent straight to the printer over Wi-Fi (raw port 9100). No account, no analytics, no server.</p>
-  <p>Works with Wi-Fi Epson inkjets that speak ESC/P-R (use the model search above). Not ESC/P-R2-only models or lasers.
-    Tested on an EcoTank ET-2600. <a href="https://github.com/Ghermin/impression-locale/releases/latest/download/ImpressionLocale.apk">Download the APK</a>,
-    open it, and print from any app. The app's own screen is in French; printing uses Android's standard dialog.</p>
 
   <footer>
     Libre sous GPL-2.0-or-later. Protocole tiré du pilote libre <a href="https://salsa.debian.org/printing-team/epson-inkjet-printer-escpr">epson-inkjet-printer-escpr</a>.

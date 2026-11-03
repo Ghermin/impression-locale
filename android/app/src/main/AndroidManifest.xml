@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Uniquement pour parler à l'imprimante sur le réseau local. -->
+    <!-- Pour parler à l'imprimante sur le réseau local, et vérifier les mises à jour sur GitHub. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_printer"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Impression">
 
         <activity
             android:name=".MainActivity"
