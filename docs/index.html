@@ -8,105 +8,159 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f6f7f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121513" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="playground.css">
 <style>
   :root {
-    color-scheme: light dark;
-    --bg: #f6f7f5; --surface: #ffffff; --text: #1d211e; --muted: #5b625d;
-    --line: #dde1dc; --accent: #2e7d32; --accent-text: #ffffff; --ok: #1b5e20; --ok-bg: #e3f1e4;
-    --no: #8a1c1c; --no-bg: #f8e5e3; --code: #eef0ec;
+    --pg-bg: #f6f7f5; --pg-surface: #ffffff; --pg-surface-2: #eef0ec; --pg-text: #1d211e; --pg-muted: #5b625d;
+    --pg-line: #dde1dc; --pg-dot: rgba(29, 33, 30, .09);
+    --pg-accent: #2e7d32; --pg-accent-2: #00897b; --pg-on-accent: #ffffff;
+    --ok: #1b5e20; --ok-bg: #e3f1e4; --no: #8a1c1c; --no-bg: #f8e5e3;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #121513; --surface: #1b1f1c; --text: #e6e9e6; --muted: #a2aaa4;
-      --line: #2e3430; --accent: #66bb6a; --accent-text: #0d130e; --ok: #a5d6a7; --ok-bg: #1f3321;
-      --no: #f2b8b5; --no-bg: #3b2120; --code: #262b27;
+      --pg-bg: #121513; --pg-surface: #1b1f1c; --pg-surface-2: #262b27; --pg-text: #e6e9e6; --pg-muted: #a2aaa4;
+      --pg-line: #2e3430; --pg-dot: rgba(230, 233, 230, .07);
+      --pg-accent: #66bb6a; --pg-accent-2: #4db6ac; --pg-on-accent: #0d130e;
+      --ok: #a5d6a7; --ok-bg: #1f3321; --no: #f2b8b5; --no-bg: #3b2120;
     }
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text);
-    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
-  header { display: flex; gap: 16px; align-items: center; margin-bottom: 8px; }
-  header svg { flex: none; border-radius: 14px; }
-  h1 { font-size: 2rem; line-height: 1.2; margin: 0; }
-  .lead { font-size: 1.15rem; color: var(--muted); margin: 8px 0 24px; }
-  h2 { font-size: 1.3rem; margin: 40px 0 12px; }
-  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 8px; }
-  .btn { display: inline-block; padding: 12px 20px; border-radius: 10px; font-weight: 600;
-    text-decoration: none; border: 1px solid var(--line); color: var(--text); background: var(--surface); }
-  .btn.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
-  .points { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
-  .points .card strong { display: block; margin-bottom: 4px; }
-  .points .card p { margin: 0; color: var(--muted); font-size: .95rem; }
-  ol { padding-left: 1.3em; } li { margin: 6px 0; }
-  input[type=search] { width: 100%; padding: 12px 14px; font-size: 1rem; border-radius: 10px;
-    border: 1px solid var(--line); background: var(--surface); color: var(--text); }
-  #verdict { margin-top: 12px; padding: 12px 16px; border-radius: 10px; display: none; }
+  body { font-family: "Figtree", system-ui, sans-serif; font-size: 17px; }
+  a { color: var(--pg-accent); }
+
+  .check { max-width: 760px; }
+  input[type=search] {
+    width: 100%; padding: 14px 16px; border: 1px solid var(--pg-line); border-radius: var(--pg-radius-sm);
+    background: var(--pg-surface); color: var(--pg-text); font: inherit; box-shadow: var(--pg-shadow);
+  }
+  input[type=search]:focus { outline: 2px solid var(--pg-accent); outline-offset: 2px; }
+  #verdict { margin-top: 12px; padding: 12px 16px; border-radius: var(--pg-radius-sm); display: none; font-weight: 600; }
   #verdict.ok { display: block; background: var(--ok-bg); color: var(--ok); }
   #verdict.no { display: block; background: var(--no-bg); color: var(--no); }
-  #matches { margin: 8px 0 0; padding: 0; list-style: none; color: var(--muted); font-size: .95rem;
-    columns: 2 180px; }
-  .note { color: var(--muted); font-size: .95rem; }
-  code { background: var(--code); padding: 1px 6px; border-radius: 5px; font-size: .92em; }
-  a { color: var(--accent); }
-  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+  #matches { margin: 10px 0 0; padding: 0; list-style: none; columns: 2 180px; font: 13.5px/1.9 var(--pg-mono); color: var(--pg-muted); }
+  .small { margin: 16px 0 0; font-size: 15px; color: var(--pg-muted); max-width: 760px; }
+
+  .limits { margin: 0; padding: 0; list-style: none; }
+  .limits li { position: relative; padding-left: 22px; }
+  .limits li + li { margin-top: 10px; }
+  .limits li::before { content: "—"; position: absolute; left: 0; color: var(--pg-accent); }
 </style>
 </head>
-<body>
+<body class="pg-page">
+<nav class="pg-strip" aria-label="Bored Dev Playground">
+  <div class="pg-strip__in">
+    <a class="pg-strip__home" href="https://ghermin.github.io/">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="pg-logo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#ff6b6b"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#pg-logo)"/><path d="M14 27h14M36 27h14" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/><path d="M16 27a5 5 0 0 0 10 0zM38 27a5 5 0 0 0 10 0z" fill="#fff"/><rect x="24" y="41" width="16" height="4.5" rx="2.25" fill="#fff"/></svg>
+      <b>bored dev playground</b><span class="pg-strip__crumb">/ impression-locale</span>
+    </a>
+    <a class="pg-strip__all" href="https://ghermin.github.io/">tous les projets <span aria-hidden="true">→</span></a>
+  </div>
+</nav>
+
+<header class="pg-top">
+  <a class="pg-brand" href="./"><img src="favicon.svg" alt="">Impression locale</a>
+  <nav class="pg-nav">
+    <a href="#compatible">Compatibilité</a>
+    <a href="#installer">Installer</a>
+    <a class="pg-gh" href="https://github.com/Ghermin/impression-locale">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      Code source
+    </a>
+  </nav>
+</header>
+
 <main>
-  <header>
-    <svg width="64" height="64" viewBox="0 0 108 108" aria-hidden="true">
-      <rect width="108" height="108" fill="#2E7D32"/>
-      <path fill="#fff" d="M36,30h36v14h-36z M26,46h56a6,6 0 0,1 6,6v22h-12v-10h-44v10h-12v-22a6,6 0 0,1 6,-6z M36,68h36v14h-36z"/>
-    </svg>
-    <h1>Impression locale</h1>
-  </header>
-  <p class="lead">Imprimer sur une jet d'encre Epson depuis Android, <strong>sans appli Epson</strong> et <strong>sans passer par Internet</strong>.</p>
+  <section class="pg-hero">
+    <div class="pg-hero__tags">
+      <p class="pg-kicker">~/projets/impression-locale</p>
+      <ul class="pg-chips" role="list"><li>Android</li><li>Impression</li><li>Epson</li></ul>
+    </div>
+    <h1>Imprimer sur votre Epson, <span class="pg-grad">sans passer par Internet</span>.</h1>
+    <p class="pg-lead">Un plug-in d'impression Android pour les jet d'encre Epson, <strong>sans appli Epson</strong> : on l'installe une fois, puis l'imprimante apparaît dans le menu <em>Imprimer</em> de toutes les applis.</p>
+    <div class="pg-cta">
+      <a class="pg-btn pg-btn--primary" href="https://github.com/Ghermin/impression-locale/releases/latest/download/ImpressionLocale.apk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Télécharger l'APK
+      </a>
+      <a class="pg-btn" href="https://github.com/Ghermin/impression-locale">Code source</a>
+    </div>
+    <p class="pg-meta">Android 8 ou plus récent · gratuit et libre (GPL) · projet indépendant, sans lien avec Epson</p>
+  </section>
 
-  <div class="cta">
-    <a class="btn primary" href="https://github.com/Ghermin/impression-locale/releases/latest/download/ImpressionLocale.apk">Télécharger l'APK</a>
-    <a class="btn" href="https://github.com/Ghermin/impression-locale">Code source</a>
-  </div>
-  <p class="note">Android 8 ou plus récent · gratuit et libre (GPL) · projet indépendant, sans lien avec Epson.</p>
+  <section class="pg-section">
+    <p class="pg-kicker">Le principe</p>
+    <h2>Le téléphone parle directement à l'imprimante</h2>
+    <p class="pg-section__lead">Les pages sont converties sur le téléphone dans le langage des jet d'encre Epson (ESC/P-R) et envoyées sur le Wi-Fi. Aucun détour par un serveur.</p>
+    <div class="pg-grid">
+      <div class="pg-card"><h3>Comme Epson Print Enabler</h3><p>Un plug-in à installer une fois : l'imprimante apparaît ensuite dans le menu <em>Imprimer</em> de toutes les applis.</p></div>
+      <div class="pg-card"><h3>Vos documents restent chez vous</h3><p>Les pages sont converties sur le téléphone et envoyées directement à l'imprimante par le Wi-Fi. Pas de compte, pas de statistiques, pas de serveur.</p></div>
+      <div class="pg-card"><h3>Mises à jour</h3><p>Une fois par jour au plus, l'appli regarde la dernière version sur GitHub (rien n'est envoyé) et vous prévient par une notification.</p></div>
+      <div class="pg-card"><h3>Trouvée automatiquement</h3><p>L'imprimante est détectée sur le réseau local. Sinon, on peut saisir son adresse IP.</p></div>
+    </div>
+  </section>
 
-  <h2>Le principe</h2>
-  <div class="points">
-    <div class="card"><strong>Comme Epson Print Enabler</strong><p>Un plug-in à installer une fois : l'imprimante apparaît ensuite dans le menu <em>Imprimer</em> de toutes les applis.</p></div>
-    <div class="card"><strong>Vos documents restent chez vous</strong><p>Les pages sont converties sur le téléphone et envoyées directement à l'imprimante par le Wi-Fi. Pas de compte, pas de statistiques, pas de serveur.</p></div>
-    <div class="card"><strong>Mises à jour</strong><p>Une fois par jour au plus, l'appli regarde la dernière version sur GitHub (rien n'est envoyé) et vous prévient par une notification.</p></div>
-    <div class="card"><strong>Trouvée automatiquement</strong><p>L'imprimante est détectée sur le réseau local. Sinon, on peut saisir son adresse IP.</p></div>
-  </div>
+  <section class="pg-section" id="compatible">
+    <p class="pg-kicker">Compatibilité</p>
+    <h2>Mon imprimante est-elle compatible ?</h2>
+    <p class="pg-section__lead">Il faut une jet d'encre Epson <strong>connectée au Wi-Fi</strong> qui comprend le langage ESC/P-R (617 modèles du pilote Linux officiel d'Epson). Tapez votre modèle :</p>
+    <div class="check">
+      <input id="q" type="search" placeholder="ex. ET-2600, XP-2150, L3150, WF-2830…" autocomplete="off" aria-label="Modèle d'imprimante">
+      <div id="verdict" role="status"></div>
+      <ul id="matches"></ul>
+    </div>
+    <p class="small">Non compatibles : modèles récents qui ne parlent que l'ESC/P-R2, laser Epson, imprimantes uniquement en USB.
+      Testé en conditions réelles sur une EcoTank ET-2600 ; les autres modèles utilisent le même langage mais n'ont pas été essayés :
+      <a href="https://github.com/Ghermin/impression-locale/issues">dites-nous si ça marche chez vous</a>.</p>
+  </section>
 
-  <h2>Mon imprimante est-elle compatible ?</h2>
-  <p>Il faut une jet d'encre Epson <strong>connectée au Wi-Fi</strong> qui comprend le langage ESC/P-R (617 modèles du pilote Linux officiel d'Epson). Tapez votre modèle :</p>
-  <input id="q" type="search" placeholder="ex. ET-2600, XP-2150, L3150, WF-2830…" autocomplete="off" aria-label="Modèle d'imprimante">
-  <div id="verdict" role="status"></div>
-  <ul id="matches"></ul>
-  <p class="note">Non compatibles : modèles récents qui ne parlent que l'ESC/P-R2, laser Epson, imprimantes uniquement en USB.
-    Testé en conditions réelles sur une EcoTank ET-2600 ; les autres modèles utilisent le même langage mais n'ont pas été essayés —
-    <a href="https://github.com/Ghermin/impression-locale/issues">dites-nous si ça marche chez vous</a>.</p>
+  <section class="pg-section" id="installer">
+    <p class="pg-kicker">Installer</p>
+    <h2>Prêt en quatre étapes</h2>
+    <p class="pg-section__lead">Un seul fichier à installer, puis l'imprimante est disponible partout.</p>
+    <div class="pg-grid pg-steps">
+      <div class="pg-card"><h3>Télécharger</h3><p>Sur le téléphone, <a href="https://github.com/Ghermin/impression-locale/releases/latest/download/ImpressionLocale.apk">téléchargez ImpressionLocale.apk</a> et ouvrez-le. Android demande d'autoriser l'installation depuis le navigateur : acceptez pour cette fois.</p></div>
+      <div class="pg-card"><h3>Activer</h3><p>Paramètres &gt; Appareils connectés &gt; Préférences de connexion &gt; <strong>Impression</strong> : vérifiez que « Impression locale » est activé.</p></div>
+      <div class="pg-card"><h3>Tester</h3><p>Ouvrez l'appli « Impression locale », acceptez les notifications (pour les mises à jour) et touchez <strong>Imprimer une page de test</strong>.</p></div>
+      <div class="pg-card"><h3>Imprimer</h3><p>Ensuite, dans n'importe quelle appli : <strong>Partager</strong> ou <strong>⋮</strong> &gt; <strong>Imprimer</strong>.</p></div>
+    </div>
+    <p class="pg-note">Vous pouvez ensuite désinstaller Epson Print Enabler / Epson iPrint pour n'avoir qu'une entrée par imprimante.</p>
+  </section>
 
-  <h2>Installation</h2>
-  <ol>
-    <li>Sur le téléphone, <a href="https://github.com/Ghermin/impression-locale/releases/latest/download/ImpressionLocale.apk">téléchargez ImpressionLocale.apk</a> et ouvrez-le. Android demande d'autoriser l'installation depuis le navigateur : acceptez pour cette fois.</li>
-    <li>Paramètres &gt; Appareils connectés &gt; Préférences de connexion &gt; <strong>Impression</strong> : vérifiez que « Impression locale » est activé.</li>
-    <li>Ouvrez l'appli « Impression locale », acceptez les notifications (pour les mises à jour) et touchez <strong>Imprimer une page de test</strong>.</li>
-    <li>Ensuite, dans n'importe quelle appli : <strong>Partager</strong> ou <strong>⋮</strong> &gt; <strong>Imprimer</strong>.</li>
-  </ol>
-  <p class="note">Vous pouvez ensuite désinstaller Epson Print Enabler / Epson iPrint pour n'avoir qu'une entrée par imprimante.</p>
+  <section class="pg-section">
+    <p class="pg-kicker">Limites</p>
+    <h2>Ce qu'il ne fait pas (encore)</h2>
+    <div class="pg-card">
+      <ul class="limits">
+        <li>Qualité normale (360 ppp) sur papier ordinaire ; pas de sans-bordure, pas de recto verso, pas de niveaux d'encre.</li>
+        <li>Si le Wi-Fi coupe en pleine impression, l'imprimante peut rester bloquée (voyant qui clignote) : éteignez-la puis rallumez-la.</li>
+      </ul>
+    </div>
+  </section>
 
-  <h2>Limites</h2>
-  <ul>
-    <li>Qualité normale (360 ppp) sur papier ordinaire ; pas de sans-bordure, pas de recto verso, pas de niveaux d'encre.</li>
-    <li>Si le Wi-Fi coupe en pleine impression, l'imprimante peut rester bloquée (voyant qui clignote) : éteignez-la puis rallumez-la.</li>
-  </ul>
-
-  <footer>
-    Libre sous GPL-2.0-or-later. Protocole tiré du pilote libre <a href="https://salsa.debian.org/printing-team/epson-inkjet-printer-escpr">epson-inkjet-printer-escpr</a>.
-    « Epson » est une marque de Seiko Epson Corporation ; ce projet n'y est pas affilié.
-  </footer>
+  <section class="pg-end">
+    <img src="favicon.svg" alt="" width="56" height="56">
+    <h2>Votre Epson, dans toutes vos applis.</h2>
+    <div class="pg-cta">
+      <a class="pg-btn pg-btn--primary" href="https://github.com/Ghermin/impression-locale/releases/latest/download/ImpressionLocale.apk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Télécharger Impression locale
+      </a>
+    </div>
+  </section>
 </main>
+
+<footer class="pg-foot">
+  <div class="pg-foot__in">
+    <p>Libre sous GPL-2.0-or-later. Protocole tiré du pilote libre <a href="https://salsa.debian.org/printing-team/epson-inkjet-printer-escpr">epson-inkjet-printer-escpr</a>.<br>
+      « Epson » est une marque de Seiko Epson Corporation ; ce projet n'y est pas affilié.</p>
+    <p>Un projet du <a href="https://ghermin.github.io/">Bored Dev Playground</a>, par <a href="https://github.com/Ghermin">Ghermin</a></p>
+  </div>
+</footer>
+
 <script>
   const norm = s => s.toUpperCase().replace(/EPSON|SERIES/g, "").replace(/[^A-Z0-9]/g, "");
   let models = [];
