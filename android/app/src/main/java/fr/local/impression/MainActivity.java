@@ -1,13 +1,16 @@
 package fr.local.impression;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -21,6 +24,7 @@ import android.print.pdf.PrintedPdfDocument;
 import android.provider.Settings;
 import android.text.InputType;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsetsController;
 import android.widget.Button;
@@ -42,6 +46,8 @@ public class MainActivity extends Activity {
 
     private Printers printers;
     private TextView list;
+    private Button update;
+    private TextView version;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -55,8 +61,14 @@ public class MainActivity extends Activity {
 
         TextView title = text("Impression locale", 22);
         root.addView(title);
+
+        update = new Button(this);
+        update.setVisibility(View.GONE);
+        update.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse(UpdateChecker.downloadUrl(this)))));
+        root.addView(update);
         root.addView(text("Imprime sur les Epson de ton Wi-Fi directement depuis le téléphone, "
-                + "sans appli Epson ni passage par Internet. Dans n'importe quelle appli : "
+                + "sans appli Epson et sans que tes documents passent par Internet. Dans n'importe quelle appli : "
                 + "Partager / ⋮ > Imprimer, puis choisis l'imprimante.", 15));
 
         root.addView(text("Imprimantes connues", 18));
@@ -94,6 +106,14 @@ public class MainActivity extends Activity {
         settings.setOnClickListener(v -> startActivity(new Intent(Settings.ACTION_PRINT_SETTINGS)));
         root.addView(settings);
 
+        version = text("", 13);
+        root.addView(version);
+
+        if (Build.VERSION.SDK_INT >= 33
+                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] {Manifest.permission.POST_NOTIFICATIONS}, 1);
+        }
+
         ScrollView scroll = new ScrollView(this);
         scroll.addView(root);
         // Affichage bord à bord (Android 15+) : on garde le texte hors des barres système.
@@ -102,9 +122,6 @@ public class MainActivity extends Activity {
                     insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
             return insets;
         });
-        if (getActionBar() != null) {
-            getActionBar().hide();
-        }
         boolean night = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
                 == Configuration.UI_MODE_NIGHT_YES;
         if (!night && Build.VERSION.SDK_INT >= 30) {
@@ -121,6 +138,18 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         refresh();
+        refreshUpdate();
+        UpdateChecker.check(this, true, () -> runOnUiThread(this::refreshUpdate));
+    }
+
+    private void refreshUpdate() {
+        String latest = UpdateChecker.availableUpdate(this);
+        update.setVisibility(latest != null ? View.VISIBLE : View.GONE);
+        if (latest != null) {
+            update.setText("Mise à jour " + latest + " disponible : télécharger");
+        }
+        version.setText("Version " + UpdateChecker.installedVersion(this)
+                + (latest == null ? " · à jour" : "") + " · github.com/" + UpdateChecker.REPO);
     }
 
     private void refresh() {

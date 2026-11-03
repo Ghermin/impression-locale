@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Thème clair ; values-night/themes.xml prend le relais quand le téléphone est en mode sombre. -->
+    <style name="Theme.Impression" parent="android:Theme.DeviceDefault.Light.NoActionBar">
+        <item name="android:windowBackground">@color/fond</item>
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
+</resources>
