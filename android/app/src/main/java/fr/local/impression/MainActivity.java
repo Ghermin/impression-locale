@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Build;
@@ -108,6 +109,14 @@ public class MainActivity extends Activity {
 
         version = text("", 13);
         root.addView(version);
+
+        // Lien discret vers le playground, tout en bas.
+        TextView sig = text("un projet du bored dev playground", 11);
+        sig.setTypeface(Typeface.MONOSPACE);
+        sig.setAlpha(0.6f);
+        sig.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://ghermin.github.io/"))));
+        root.addView(sig);
 
         if (Build.VERSION.SDK_INT >= 33
                 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
