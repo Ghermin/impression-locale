@@ -50,7 +50,7 @@ final class Discovery extends PrinterDiscoverySession {
         }
         addPrinters(known);
         startMdns();
-        UpdateChecker.check(service, false, null);
+        UpdateChecker.check(service, false, false, null);
     }
 
     @Override
@@ -180,9 +180,8 @@ final class Discovery extends PrinterDiscoverySession {
         if (address == null) {
             return;
         }
-        Printers.Entry entry = new Printers.Entry(info.getServiceName(), info.getServiceName(),
-                address.getHostAddress(), info.getPort() > 0 ? info.getPort() : Printers.RAW_PORT);
-        printers.save(entry);
+        Printers.Entry entry = printers.save(new Printers.Entry(info.getServiceName(), info.getServiceName(),
+                address.getHostAddress(), info.getPort() > 0 ? info.getPort() : Printers.RAW_PORT));
         Log.i(EpsonPrintService.TAG, "Imprimante trouvée : " + entry.name + " @ " + entry.host + ":" + entry.port);
         List<PrinterInfo> list = new ArrayList<>();
         list.add(service.printerInfo(entry));

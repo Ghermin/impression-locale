@@ -2,6 +2,29 @@ plugins {
     id 'com.android.application'
 }
 
+// Version : « 1.4 » par défaut, ou l'étiquette vX.Y(.Z) quand la CI publie une release.
+def appVersion = System.getenv('IMPRESSION_VERSION_NAME') ?: '1.4'
+def parts = (appVersion.tokenize('.').collect { it.isInteger() ? it.toInteger() : 0 } + [0, 0, 0]).take(3)
+// Code dérivé du nom (1.4 → 10400) : identique en local et en CI, toujours croissant.
+def appVersionCode = parts[0] * 10000 + parts[1] * 100 + parts[2]
+
+// Clé de signature stable, indispensable pour que l'appli puisse se mettre à jour toute seule.
+// CI : IMPRESSION_KEYSTORE + IMPRESSION_KEYSTORE_PASSWORD (secrets du dépôt).
+// En local : ~/.android/impression-locale.jks + impression-locale.properties (storePassword=…).
+def keystorePath = System.getenv('IMPRESSION_KEYSTORE')
+def keystorePassword = System.getenv('IMPRESSION_KEYSTORE_PASSWORD')
+if (keystorePath == null) {
+    def home = System.getProperty('user.home')
+    def localJks = new File(home, '.android/impression-locale.jks')
+    def localProps = new File(home, '.android/impression-locale.properties')
+    if (localJks.exists() && localProps.exists()) {
+        def p = new Properties()
+        localProps.withInputStream { p.load(it) }
+        keystorePath = localJks.path
+        keystorePassword = p.getProperty('storePassword')
+    }
+}
+
 android {
     namespace 'fr.local.impression'
     compileSdk 35
@@ -10,16 +33,30 @@ android {
         applicationId 'fr.local.impression'
         minSdk 26
         targetSdk 35
-        versionCode 4
-        versionName '1.3'
+        versionCode appVersionCode
+        versionName appVersion
+    }
+
+    signingConfigs {
+        release {
+            if (keystorePath != null) {
+                storeFile file(keystorePath)
+                storePassword keystorePassword
+                keyAlias 'impression'
+                keyPassword keystorePassword
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            // Signée avec la clé de débogage locale : suffisant pour une installation manuelle.
-            signingConfig signingConfigs.debug
+            signingConfig keystorePath != null ? signingConfigs.release : signingConfigs.debug
         }
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     compileOptions {
