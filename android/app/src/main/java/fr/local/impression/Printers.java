@@ -51,7 +51,11 @@ final class Printers {
     }
 
     private static boolean isByAddress(Entry e) {
-        return e.id.startsWith("ip:");
+        return isByAddressId(e.id);
+    }
+
+    private static boolean isByAddressId(String id) {
+        return id.startsWith("ip:");
     }
 
     void remove(String id) {
@@ -59,7 +63,17 @@ final class Printers {
     }
 
     Entry get(String id) {
-        return parse(id, prefs.getString(id, null));
+        Entry e = parse(id, prefs.getString(id, null));
+        if (e == null && id != null && isByAddressId(id)) {
+            // Entrée par adresse remplacée par son nom mDNS : même imprimante, on la retrouve.
+            String host = id.substring(3);
+            for (Entry other : all()) {
+                if (other.host.equals(host)) {
+                    return other;
+                }
+            }
+        }
+        return e;
     }
 
     List<Entry> all() {
