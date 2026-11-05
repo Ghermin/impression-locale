@@ -3,7 +3,11 @@
 
     <!-- Pour parler à l'imprimante sur le réseau local, et vérifier les mises à jour sur GitHub. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Pour connaître le sous-réseau Wi-Fi à parcourir lors de la recherche des imprimantes. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Mise à jour automatique depuis les releases GitHub. -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:allowBackup="false"
@@ -20,6 +24,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".UpdateChecker$InstallResult"
+            android:exported="false" />
+        <receiver
+            android:name=".UpdateChecker$Updated"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name=".EpsonPrintService"

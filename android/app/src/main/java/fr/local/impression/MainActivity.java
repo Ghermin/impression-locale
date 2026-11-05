@@ -49,6 +49,10 @@ public class MainActivity extends Activity {
     private TextView list;
     private Button update;
     private TextView version;
+    private TextView scanStatus;
+    private Button rescan;
+    /** Dernière recherche réseau : on ne la relance pas à chaque retour sur l'écran. */
+    private static long lastScan;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -65,8 +69,8 @@ public class MainActivity extends Activity {
 
         update = new Button(this);
         update.setVisibility(View.GONE);
-        update.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse(UpdateChecker.downloadUrl(this)))));
+        // Secours si l'installation automatique échoue : téléchargement dans le navigateur.
+        update.setOnClickListener(v -> startActivity(UpdateChecker.browserIntent(this)));
         root.addView(update);
         root.addView(text("Imprime sur les Epson de ton Wi-Fi directement depuis le téléphone, "
                 + "sans appli Epson et sans que tes documents passent par Internet. Dans n'importe quelle appli : "
@@ -75,6 +79,14 @@ public class MainActivity extends Activity {
         root.addView(text("Imprimantes connues", 18));
         list = text("", 15);
         root.addView(list);
+
+        scanStatus = text("", 13);
+        scanStatus.setAlpha(0.75f);
+        root.addView(scanStatus);
+        rescan = new Button(this);
+        rescan.setText("Rechercher à nouveau");
+        rescan.setOnClickListener(v -> startScan());
+        root.addView(rescan);
 
         Button test = new Button(this);
         test.setText("Imprimer une page de test");
@@ -148,14 +160,38 @@ public class MainActivity extends Activity {
         super.onResume();
         refresh();
         refreshUpdate();
-        UpdateChecker.check(this, true, () -> runOnUiThread(this::refreshUpdate));
+        // À l'ouverture : mise à jour automatique (téléchargée puis installée) et recherche réseau.
+        UpdateChecker.check(this, true, true, () -> runOnUiThread(this::refreshUpdate));
+        if (System.currentTimeMillis() - lastScan > 30_000) {
+            startScan();
+        }
+    }
+
+    private void startScan() {
+        if (NetworkScan.isRunning()) {
+            return;
+        }
+        lastScan = System.currentTimeMillis();
+        rescan.setEnabled(false);
+        NetworkScan.start(this, (status, done) -> {
+            if (isDestroyed()) {
+                return;
+            }
+            scanStatus.setText(status);
+            if (done) {
+                rescan.setEnabled(true);
+                refresh();
+            }
+        });
     }
 
     private void refreshUpdate() {
         String latest = UpdateChecker.availableUpdate(this);
         update.setVisibility(latest != null ? View.VISIBLE : View.GONE);
         if (latest != null) {
-            update.setText("Mise à jour " + latest + " disponible : télécharger");
+            update.setText(UpdateChecker.isInstalling()
+                    ? "Installation de la version " + latest + "…"
+                    : "Mise à jour " + latest + " disponible : télécharger");
         }
         version.setText("Version " + UpdateChecker.installedVersion(this)
                 + (latest == null ? " · à jour" : "") + " · github.com/" + UpdateChecker.REPO);
@@ -167,7 +203,8 @@ public class MainActivity extends Activity {
             sb.append("• ").append(e.name).append(" — ").append(e.host).append('\n');
         }
         list.setText(sb.length() > 0 ? sb.toString().trim()
-                : "Aucune pour l'instant : elles apparaissent quand tu ouvres l'écran d'impression.");
+                : "Aucune pour l'instant : l'appli cherche sur ton Wi-Fi à chaque ouverture, "
+                        + "et aussi quand tu ouvres l'écran d'impression.");
     }
 
     private TextView text(String s, int sp) {

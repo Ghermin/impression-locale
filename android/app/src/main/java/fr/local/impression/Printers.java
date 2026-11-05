@@ -31,8 +31,27 @@ final class Printers {
         prefs = context.getSharedPreferences("printers", Context.MODE_PRIVATE);
     }
 
-    void save(Entry e) {
-        prefs.edit().putString(e.id, e.name + "\n" + e.host + "\n" + e.port).apply();
+    /**
+     * Enregistre l'imprimante et renvoie l'entrée gardée. Une même adresse n'apparaît
+     * qu'une fois : le nom annoncé en mDNS l'emporte sur une entrée par adresse IP
+     * (ajout manuel ou recherche réseau).
+     */
+    synchronized Entry save(Entry e) {
+        SharedPreferences.Editor edit = prefs.edit();
+        for (Entry other : all()) {
+            if (!other.id.equals(e.id) && other.host.equals(e.host) && other.port == e.port) {
+                if (isByAddress(e) && !isByAddress(other)) {
+                    return other; // déjà connue sous son nom réseau
+                }
+                edit.remove(other.id);
+            }
+        }
+        edit.putString(e.id, e.name + "\n" + e.host + "\n" + e.port).apply();
+        return e;
+    }
+
+    private static boolean isByAddress(Entry e) {
+        return e.id.startsWith("ip:");
     }
 
     void remove(String id) {
