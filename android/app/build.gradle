@@ -2,8 +2,8 @@ plugins {
     id 'com.android.application'
 }
 
-// Version : « 1.5 » par défaut, ou l'étiquette vX.Y(.Z) quand la CI publie une release.
-def appVersion = System.getenv('IMPRESSION_VERSION_NAME') ?: '1.5'
+// Version : « 1.6 » par défaut, ou l'étiquette vX.Y(.Z) quand la CI publie une release.
+def appVersion = System.getenv('IMPRESSION_VERSION_NAME') ?: '1.6'
 def parts = (appVersion.tokenize('.').collect { it.isInteger() ? it.toInteger() : 0 } + [0, 0, 0]).take(3)
 // Code dérivé du nom (1.4 → 10400) : identique en local et en CI, toujours croissant.
 def appVersionCode = parts[0] * 10000 + parts[1] * 100 + parts[2]
