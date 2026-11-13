@@ -13,25 +13,25 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="playground.css">
 <style>
   :root {
-    --pg-bg: #f6f7f5; --pg-surface: #ffffff; --pg-surface-2: #eef0ec; --pg-text: #1d211e; --pg-muted: #5b625d;
-    --pg-line: #dde1dc; --pg-dot: rgba(29, 33, 30, .09);
-    --pg-accent: #2e7d32; --pg-accent-2: #00897b; --pg-on-accent: #ffffff;
-    --ok: #1b5e20; --ok-bg: #e3f1e4; --no: #8a1c1c; --no-bg: #f8e5e3;
+    --pg-bg: #f3f7f7; --pg-surface: #ffffff; --pg-surface-2: #e7f0f0; --pg-text: #132225; --pg-muted: #53676b;
+    --pg-line: #d6e3e4; --pg-dot: rgba(19, 34, 37, .08);
+    --pg-accent: #0b7285; --pg-accent-2: #13a389; --pg-on-accent: #ffffff;
+    --no: #a32222; --no-bg: #f9e6e4;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --pg-bg: #121513; --pg-surface: #1b1f1c; --pg-surface-2: #262b27; --pg-text: #e6e9e6; --pg-muted: #a2aaa4;
-      --pg-line: #2e3430; --pg-dot: rgba(230, 233, 230, .07);
-      --pg-accent: #66bb6a; --pg-accent-2: #4db6ac; --pg-on-accent: #0d130e;
-      --ok: #a5d6a7; --ok-bg: #1f3321; --no: #f2b8b5; --no-bg: #3b2120;
+      --pg-bg: #0c1415; --pg-surface: #141e20; --pg-surface-2: #1c292b; --pg-text: #e3eeee; --pg-muted: #9bb1b3;
+      --pg-line: #253436; --pg-dot: rgba(227, 238, 238, .06);
+      --pg-accent: #3ccfb2; --pg-accent-2: #3aaed0; --pg-on-accent: #04191b;
+      --no: #f2b8b5; --no-bg: #3b2120;
     }
   }
   * { box-sizing: border-box; }
-  body { font-family: "Figtree", system-ui, sans-serif; font-size: 17px; }
+  body { font-size: 17px; }
   a { color: var(--pg-accent); }
 
   .check { max-width: 760px; }
@@ -41,7 +41,7 @@
   }
   input[type=search]:focus { outline: 2px solid var(--pg-accent); outline-offset: 2px; }
   #verdict { margin-top: 12px; padding: 12px 16px; border-radius: var(--pg-radius-sm); display: none; font-weight: 600; }
-  #verdict.ok { display: block; background: var(--ok-bg); color: var(--ok); }
+  #verdict.ok { display: block; background: color-mix(in srgb, var(--pg-accent) 12%, var(--pg-surface)); color: var(--pg-accent); }
   #verdict.no { display: block; background: var(--no-bg); color: var(--no); }
   #matches { margin: 10px 0 0; padding: 0; list-style: none; columns: 2 180px; font: 13.5px/1.9 var(--pg-mono); color: var(--pg-muted); }
   .small { margin: 16px 0 0; font-size: 15px; color: var(--pg-muted); max-width: 760px; }
