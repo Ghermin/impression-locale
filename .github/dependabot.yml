@@ -10,5 +10,5 @@ updates:
         patterns: ["*"]
     ignore:
       # gradle/actions v6 change ses conditions de licence : rester en v5 tant que ce n'est pas accepté.
-      - dependency-name: gradle/actions
+      - dependency-name: "gradle/actions*"
         update-types: ["version-update:semver-major"]
