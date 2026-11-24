@@ -1,0 +1,10 @@
+# Garde à jour les actions épinglées par SHA dans .github/workflows.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
